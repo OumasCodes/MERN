@@ -3,7 +3,7 @@ import React from "react";
 import PlacesList from "../components/PlacesList";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
-const DUMMY_PLACES = [
+export const DUMMY_PLACES = [
   {
     id: "p1",
     title: "Tokyo",
