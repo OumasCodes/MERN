@@ -1,14 +1,26 @@
-const express = require("express");
+const express = require('express');
+const { check } = require('express-validator');
+
+const usersController = require('../controllers/users-controllers');
+
 const router = express.Router();
 
-const usersControllers = require("../controllers/users-controller");
+router.get('/', usersController.getUsers);
 
-router.get("/", usersControllers.getAllUsers);
+router.post(
+  '/signup',
+  [
+    check('name')
+      .not()
+      .isEmpty(),
+    check('email')
+      .normalizeEmail() // Test@test.com => test@test.com
+      .isEmail(),
+    check('password').isLength({ min: 6 })
+  ],
+  usersController.signup
+);
 
-router.get("/:uid", usersControllers.getUserById);
-
-router.post("/signup", usersControllers.signup);
-
-router.post("/login", usersControllers.login);
+router.post('/login', usersController.login);
 
 module.exports = router;
