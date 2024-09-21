@@ -2,7 +2,6 @@ const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 
 const HttpError = require("../models/http-error");
-// const getCoordsForAddress = require("../util/location");
 const Place = require("../models/place");
 const User = require("../models//user");
 
@@ -54,7 +53,7 @@ const createPlace = async (req, res, next) => {
     title,
     description,
     address,
-    location: { lat: 40.7484474, lng: -73.9871516 },
+    coordinates: { lat: 40.7484474, lng: -73.9871516 },
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg",
     creator,
   });

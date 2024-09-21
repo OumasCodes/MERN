@@ -7,28 +7,36 @@ import Map from "../../shared/components/UIElements/Map";
 import { AuthContext } from "../../shared/context/auth-context";
 
 import "./PlaceItem.css";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const PlacesItem = (props) => {
   const auth = useContext(AuthContext);
 
-  const [showMap, setShowMap] = useState(false);
+  const [show, setShow] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const openModalHandler = () => setShowMap(true);
-  const closeModalHandler = () => setShowMap(false);
+  const openModalHandler = () => setShow(true);
+  const closeModalHandler = () => setShow(false);
 
   const openDeleteModal = () => setShowDeleteModal(true);
   const closeDeleteModal = () => setShowDeleteModal(false);
 
-  const deletePlaceHandler = () => {
-    console.log("Deleting ...");
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const history = useHistory();
+
+  const deletePlaceHandler = async () => {
+    try {
+      await sendRequest(`http://loclhost:5000/api/places/${props.id}`, "DELETE");
+      history.push("/");
+    } catch (err) {}
     closeDeleteModal();
   };
 
   return (
     <React.Fragment>
       <Modal
-        showMap={showMap}
+        show={show}
         onCancel={closeModalHandler}
         header={props.address}
         contentClass="place-item__modal-content"
@@ -40,7 +48,7 @@ const PlacesItem = (props) => {
         </div>
       </Modal>
       <Modal
-        showMap={showDeleteModal}
+        show={showDeleteModal}
         onCancel={closeDeleteModal}
         header="Confirm delete ?"
         contentClass="place-item__modal-content"
@@ -70,7 +78,7 @@ const PlacesItem = (props) => {
             <Button inverse onClick={openModalHandler}>
               OPEN MAP
             </Button>
-            {auth.isLoggedIn && (
+            {auth.userId === props.creator && (
               <React.Fragment>
                 <Button to={`/places/${props.id}`}>EDIT</Button>
                 <Button danger onClick={openDeleteModal}>

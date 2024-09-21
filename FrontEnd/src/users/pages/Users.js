@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UsersList from "../components/UsersList";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Users = () => {
-  const USERS = [
-    { id: "u1", name: "User 1", image: "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745", places: 1 },
-    { id: "u2", name: "User 2", image: "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-man-avatar-with-circle-frame-vector-ilustration-png-image_6110328.png", places: 3 },
-    { id: "u3", name: "User 3", image: "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-with-beard-vector-ilustration-png-image_6110777.png", places: 6 },
-  ];
-  return <UsersList items={USERS} />;
+  const [users, setUsers] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  useEffect(() => {
+    try {
+      const fetchUsers = async () => {
+        const responseData = await sendRequest("http://localhost:5000/api/users");
+        setUsers(responseData.users);
+      };
+      fetchUsers();
+    } catch (err) {}
+  }, [sendRequest]);
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && <LoadingSpinner asOverlay />}
+      {users && !isLoading && <UsersList items={users} />}
+    </React.Fragment>
+  );
 };
 
 export default Users;
