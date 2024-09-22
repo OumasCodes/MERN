@@ -22,12 +22,12 @@ const PlacesItem = (props) => {
   const openDeleteModal = () => setShowDeleteModal(true);
   const closeDeleteModal = () => setShowDeleteModal(false);
 
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { sendRequest } = useHttpClient();
   const history = useHistory();
 
   const deletePlaceHandler = async () => {
     try {
-      await sendRequest(`http://loclhost:5000/api/places/${props.id}`, "DELETE");
+      await sendRequest(`http://localhost:5000/api/places/${props.id}`, "DELETE");
       history.push("/");
     } catch (err) {}
     closeDeleteModal();
@@ -67,7 +67,7 @@ const PlacesItem = (props) => {
       <li className="place-item center">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={props.image} alt={props.title} />
+            <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
           </div>
           <div className="plce-item__info">
             <h2>{props.title}</h2>
