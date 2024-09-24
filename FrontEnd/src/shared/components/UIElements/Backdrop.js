@@ -1,10 +1,13 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import "./Backdrop.css";
+import './Backdrop.css';
 
-const Backdrop = (props) => {
-  return ReactDOM.createPortal(<div className="backdrop" onClick={props.onClick}></div>, document.getElementById("overlay-hook"));
+const Backdrop = props => {
+  return ReactDOM.createPortal(
+    <div className="backdrop" onClick={props.onClick}></div>,
+    document.getElementById('backdrop-hook')
+  );
 };
 
 export default Backdrop;
